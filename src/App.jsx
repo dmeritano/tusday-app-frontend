@@ -9,8 +9,6 @@ import AccountConfirmation from "./pages/AccountConfirmation"
 
 function App() {
 
-  console.log(import.meta.env.VITE_BACKEND_URL)
-
   return (
 
     <BrowserRouter>
