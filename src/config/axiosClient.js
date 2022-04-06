@@ -1,7 +1,17 @@
 import axios from "axios"
 
 const axiosClient = axios.create({
-    baseURL:`${import.meta.env.VITE_BACKEND_URL}/api`
+  baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`,
 })
 
-export default axiosClient
+
+const axiosClientRequestAuthConfig = (token) => {
+    return {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      }    
+}
+
+export { axiosClient, axiosClientRequestAuthConfig }

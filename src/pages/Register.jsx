@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import Alert from "../components/Alert"
 import { validPassword } from "../helpers" 
-import axiosClient from "../config/axiosClient"
+import { axiosClient } from "../config/axiosClient"
 
 const Register = () => {
 
