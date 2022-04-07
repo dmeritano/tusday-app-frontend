@@ -11,7 +11,7 @@ const FormProject = () => {
   const [deliveryDate, setDeliveryDate] = useState("")
   const [client, setClient] = useState("")
   const params = useParams()
-  const { showAlert, alert,submitProject, project } = useProjects()
+  const { showAlert,alert,submitProject,project } = useProjects()
 
   useEffect(()=>{
     if(params.id){

@@ -6,7 +6,7 @@ import FormProject from "../components/FormProject"
 const EditProyect = ({ buttonText }) => {
   const params = useParams()
 
-  const { getProjectById, project, loading, deleteProjet } = useProjects()
+  const { getProjectById, project, loading, deleteProject } = useProjects()
 
   useEffect(() => {
     getProjectById(params.id)
@@ -17,7 +17,7 @@ const EditProyect = ({ buttonText }) => {
 
   const handleClick = () => {
     if (confirm("Delete project " + name + " ?")){      
-      deleteProjet(_id)
+      deleteProject(_id)
     }
   }
 

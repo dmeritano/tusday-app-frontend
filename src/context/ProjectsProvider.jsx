@@ -10,6 +10,7 @@ const ProjectsProvider = ({children}) => {
     const [alert, setAlert] = useState({})
     const [project, setProject] = useState({})
     const [loading, setLoading] = useState(false)
+    const [modalFormTask, setModalFormTask] = useState(false)
 
     const navigate = useNavigate()
     
@@ -108,7 +109,7 @@ const ProjectsProvider = ({children}) => {
         }
     }
 
-    const deleteProjet = async (id) => {
+    const deleteProject = async (id) => {
                 
         try {            
             const token = localStorage.getItem("token")
@@ -130,6 +131,24 @@ const ProjectsProvider = ({children}) => {
         }finally{}   
     }
 
+    const handleModalTask = () => {
+        setModalFormTask(!modalFormTask)
+    }
+
+    const submitTask = async (task) => {
+        try {
+            const token = localStorage.getItem("token")
+            const { data } = await axiosClient.post("/tasks", task, axiosClientRequestAuthConfig(token))            
+            console.log(data)
+            setAlert({
+                msg:"Task created successfully"
+            })            
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return(
         <ProjectsContext.Provider
             value={{
@@ -140,7 +159,10 @@ const ProjectsProvider = ({children}) => {
                 getProjectById,
                 project,
                 loading,
-                deleteProjet
+                deleteProject,
+                modalFormTask,
+                handleModalTask,
+                submitTask
             }}
         >{children}
         </ProjectsContext.Provider>
