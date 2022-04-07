@@ -13,6 +13,8 @@ const Login = () => {
   const [alert, setAlert] = useState({})
   const { setAuth } = useAuth()
 
+  const navigate = useNavigate()
+
   const handleSubmit = async (evt) => {
     evt.preventDefault()
 
@@ -33,6 +35,9 @@ const Login = () => {
       localStorage.setItem("token", data.token)
       //user data en auth context
       setAuth(data)
+      //Home of projects
+      navigate("/projects")
+
 
 
     } catch (error) {
