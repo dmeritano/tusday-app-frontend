@@ -13,6 +13,7 @@ const ProjectsProvider = ({children}) => {
     const [modalFormTask, setModalFormTask] = useState(false)
     const [modalDeleteTask, setModalDeleteTask] = useState(false)
     const [task, setTask] = useState({})
+    const [collaborator, setCollaborator] = useState({})
 
     const navigate = useNavigate()
     
@@ -105,9 +106,12 @@ const ProjectsProvider = ({children}) => {
             const { data } = await axiosClient(`/projects/${id}`, axiosClientRequestAuthConfig(token))
             
             setProject(data)
-            
+            setAlert({})
         } catch (error) {
-            console.log(error)
+            setAlert({
+                msg:error.response.data.msg,
+                error:true
+            })
         }finally{
             setLoading(false)
         }
@@ -211,6 +215,45 @@ const ProjectsProvider = ({children}) => {
         }
     }
 
+    const submitCollaborator = async (email) => {
+        setLoading(true)
+        try {
+            const token = localStorage.getItem("token")
+            const { data } = await axiosClient.post("/projects/collaborators", {email}, axiosClientRequestAuthConfig(token))
+            setCollaborator(data)
+            setAlert({})
+        } catch (error) {
+            console.log("no lo encontro:", error)            
+            setAlert({
+                msg:error.response.data.msg,
+                error:true
+            })            
+            setTimeout(()=>{
+                setAlert({})
+            },2000)
+        } finally{
+            setLoading(false)
+        }
+    }
+
+    const addCollaborator = async (email) => {
+        try {
+            const token = localStorage.getItem("token")
+            const { data } = await axiosClient.post(`/projects/collaborators/${project._id}`, email, axiosClientRequestAuthConfig(token))
+                        
+            setAlert({
+                msg:data.msg,
+            })
+            setCollaborator({})            
+            setAlert({})
+        } catch (error) {
+            setAlert({
+                msg:error.response.data.msg,
+                error:true
+            })
+        }
+    }
+
     return(
         <ProjectsContext.Provider
             value={{
@@ -229,7 +272,10 @@ const ProjectsProvider = ({children}) => {
                 task,
                 modalDeleteTask,
                 handleModalDeleteTask,
-                deleteTask
+                deleteTask,
+                submitCollaborator,
+                collaborator,
+                addCollaborator
             }}
         >{children}
         </ProjectsContext.Provider>

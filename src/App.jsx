@@ -10,6 +10,7 @@ import NewPassword from "./pages/NewPassword"
 import AccountConfirmation from "./pages/AccountConfirmation"
 import Projects from "./pages/Projects"
 import NewProject from "./pages/NewProject"
+import NewCollaborator from "./pages/NewCollaborator"
 import Project from "./pages/Project"
 import EditProyect from "./pages/EditProyect"
 
@@ -40,6 +41,7 @@ function App() {
               <Route path="/projects" element={<ProtectedRouteLayout />}>
                 <Route index element={<Projects />}/>
                 <Route path="create-project" element={<NewProject />}/>
+                <Route path="new-collaborator/:id" element={<NewCollaborator />}/>
                 <Route path=":id" element={<Project />}/>
                 <Route path="edit/:id" element={<EditProyect />}/>
               </Route>
