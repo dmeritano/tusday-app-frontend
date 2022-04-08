@@ -11,6 +11,8 @@ const ProjectsProvider = ({children}) => {
     const [project, setProject] = useState({})
     const [loading, setLoading] = useState(false)
     const [modalFormTask, setModalFormTask] = useState(false)
+    const [modalDeleteTask, setModalDeleteTask] = useState(false)
+    const [task, setTask] = useState({})
 
     const navigate = useNavigate()
     
@@ -71,6 +73,8 @@ const ProjectsProvider = ({children}) => {
         }
     }
     const updateProject = async project => {
+        console.log(project)
+
         try {
             const token = localStorage.getItem("token")
             if (!token) return
@@ -133,17 +137,75 @@ const ProjectsProvider = ({children}) => {
 
     const handleModalTask = () => {
         setModalFormTask(!modalFormTask)
+        setTask({})
     }
 
-    const submitTask = async (task) => {
+    const handleModalEditTask = (task) => {
+        setTask(task)
+        setModalFormTask(!modalFormTask)
+    }
+
+    const handleModalDeleteTask = (task) => {
+        setTask(task)
+        setModalDeleteTask(!modalDeleteTask)
+    }
+
+    const submitTask = async (task) => {        
+        if (task?.id){
+            await updateTask(task)
+        }else{
+            await createTask(task)
+        }        
+    }
+
+    const createTask = async (task) => {
         try {
             const token = localStorage.getItem("token")
             const { data } = await axiosClient.post("/tasks", task, axiosClientRequestAuthConfig(token))            
-            console.log(data)
-            setAlert({
-                msg:"Task created successfully"
-            })            
 
+            //Add task to state 
+            const updated = {...project}
+            updated.tasks = [...project.tasks, data]
+            setProject(updated)
+            setAlert({})
+            setModalFormTask(false)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const updateTask = async (task) => {
+        const token = localStorage.getItem("token")
+        const { data } = await axiosClient.put(`/tasks/${task.id}`, task, axiosClientRequestAuthConfig(token))
+
+        setAlert({})
+        setModalFormTask(false)
+    
+        //Update project's tasks
+        const updated = {...project}
+        updated.tasks = updated.tasks.map( t => t._id === data._id ? data : t )
+        setProject(updated)
+    }
+
+    
+    const deleteTask = async () => {
+        try {
+            //Delete current task (in state)
+            const token = localStorage.getItem("token")
+            const { data } = await axiosClient.delete(`/tasks/${task._id}`, axiosClientRequestAuthConfig(token)) 
+            setAlert({
+                msg:data.msg
+            })
+
+            //Update project's tasks
+            const updated = {...project}
+            updated.tasks = updated.tasks.filter( t => t._id !== task._id )
+            setProject(updated)
+            setModalDeleteTask(false)
+            setTask({})
+            setTimeout(()=>{
+                setAlert({})
+            },2000)
         } catch (error) {
             console.log(error)
         }
@@ -162,7 +224,12 @@ const ProjectsProvider = ({children}) => {
                 deleteProject,
                 modalFormTask,
                 handleModalTask,
-                submitTask
+                submitTask,
+                handleModalEditTask,
+                task,
+                modalDeleteTask,
+                handleModalDeleteTask,
+                deleteTask
             }}
         >{children}
         </ProjectsContext.Provider>

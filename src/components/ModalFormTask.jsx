@@ -7,9 +7,10 @@ import { useParams } from "react-router-dom"
 const PRIORITIES = ["Low", "Medium", "High"]
 
 const ModalFormTask = () => {
+  const { modalFormTask, handleModalTask, showAlert, alert, submitTask, task } =
+    useProjects()
 
-  const { modalFormTask, handleModalTask, showAlert, alert, submitTask } = useProjects()
-
+  const [id, setId] = useState(null) //To determine if we are creating or editing
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [deliveryDate, setDeliveryDate] = useState("")
@@ -17,20 +18,42 @@ const ModalFormTask = () => {
 
   const params = useParams() //id:3223 => project ID
 
-  useEffect(() => {}, [])
-
-  const handleSubmit = (evt) => {
-      evt.preventDefault()
-      if ([name,description,priority,deliveryDate].includes("")){
-        showAlert({
-            msg:"All fields are required",
-            error: true
-        })
-        return
+  useEffect(() => {
+    if (task?._id) {
+      setId(task._id)
+      setName(task.name)
+      setDescription(task.description)
+      setDeliveryDate(task.deliveryDate?.split("T")[0])
+      setPriority(task.priority)
+      return
     }
-    
+    setId(null)
+    setName("")
+    setDescription("")
+    setDeliveryDate("")
+    setPriority("")
+  }, [task])
+
+  const handleSubmit = async (evt) => {
+    evt.preventDefault()
+    if ([name, description, priority, deliveryDate].includes("")) {
+      showAlert({
+        msg: "All fields are required",
+        error: true,
+      })
+      return
+    }
+
     //Submit task
-    submitTask({name,description,deliveryDate,priority, project:params.id})
+    await submitTask({
+      id,
+      name,
+      description,
+      deliveryDate,
+      priority,
+      project: params.id,
+    })
+    setId(null)
     setName("")
     setDescription("")
     setDeliveryDate("")
@@ -78,7 +101,7 @@ const ModalFormTask = () => {
               <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button
                   type="button"
-                  className="bg-white rounded-md text-orange-400 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  className="bg-white rounded-md text-orange-400 hover:text-orange-600 focus:outline-none focus:ring-offset-2"
                   onClick={handleModalTask}
                 >
                   <span className="sr-only">Close</span>
@@ -103,11 +126,11 @@ const ModalFormTask = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Create new task
+                    {id ? "Edit task" : "Create task"}
                   </Dialog.Title>
 
                   <form className="my-10" onSubmit={handleSubmit}>
-                    {alert.msg && <Alert alert={alert}/>}
+                    {alert.msg && <Alert alert={alert} />}
                     <div className="mb-5">
                       <label
                         className="text-gray-500 uppercase font-bold text-sm"
@@ -153,7 +176,7 @@ const ModalFormTask = () => {
                         value={deliveryDate}
                         onChange={(evt) => setDeliveryDate(evt.target.value)}
                       />
-                    </div>                    
+                    </div>
                     <div className="mb-5">
                       <label
                         className="text-gray-500 uppercase font-bold text-sm"
@@ -176,7 +199,7 @@ const ModalFormTask = () => {
 
                     <input
                       type="submit"
-                      value="Create"
+                      value={id ? "Update" : "Create"}
                       className="bg-orange-600 text-white uppercase w-full py-2 font-bold rounded hover:cursor-pointer hover:bg-orange-900 transition-colors text-sm"
                     />
                   </form>

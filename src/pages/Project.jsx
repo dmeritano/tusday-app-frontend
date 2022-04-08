@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import useProjects from "../hooks/useProjects"
 import ModalFormTask from "../components/ModalFormTask"
+import ModalDeleteTask from "../components/ModalDeleteTask"
+import Task from "../components/Task"
+import Alert from "../components/Alert"
+
 
 const Project = () => {
   const params = useParams()
-  const { getProjectById, project, loading, handleModalTask } = useProjects()
-  const { name } = project
-  const [modal, setModal] = useState(false)
-
+  const { getProjectById, project, loading, handleModalTask, alert } = useProjects()  
+  
   useEffect(() => {
     getProjectById(params.id)    
     
   }, [])
   
+  const { name, tasks } = project
 
   if (loading) return "Loading..."
-
-  //if (project.name) console.log(project)
 
   return (
     <>
@@ -68,7 +69,27 @@ const Project = () => {
         Task
       </button>
 
-      <ModalFormTask modal={modal} setModal={setModal}/>
+      <p className="font-bold text-lg mt-10 text-gray-700">Task List</p>
+
+      {alert.msg && <Alert alert={alert}/>}
+
+      <div className="bg-white shadow mt-5 rounded">
+          {tasks?.length ? 
+            tasks?.map( task => (
+              <Task
+                key={task._id}
+                task={task}
+              />
+            )) : 
+            <p 
+              className="text-center text-gray-700 my-5 p-10">
+                There are no tasks in the project. <span className="text-orange-700">Try adding one!</span>
+            </p>
+          }
+      </div>
+
+      <ModalFormTask />
+      <ModalDeleteTask />
     </>
   )
 }
