@@ -2,15 +2,15 @@ import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import useProjects from "../hooks/useProjects"
 
-const ModalDeleteTask = () => {
-  const { modalDeleteTask, handleModalDeleteTask, task, deleteTask, project } = useProjects()
+const ModalDeleteCollaborator = () => {
+  const { modalDeleteCollaborator, handleModalDeleteCollaborator, collaborator, deleteCollaborator, project } = useProjects()
 
   return (
-    <Transition.Root show={modalDeleteTask} as={Fragment}>
+    <Transition.Root show={modalDeleteCollaborator} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
-        onClose={handleModalDeleteTask}
+        onClose={handleModalDeleteCollaborator}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -47,7 +47,7 @@ const ModalDeleteTask = () => {
                 <button
                   type="button"
                   className="bg-white rounded-md text-orange-400 hover:text-orange-600 focus:outline-none focus:ring-offset-2"
-                  onClick={handleModalDeleteTask}
+                  onClick={handleModalDeleteCollaborator}
                 >
                   <span className="sr-only">Close</span>
                   <svg
@@ -85,14 +85,14 @@ const ModalDeleteTask = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Delete task
+                    Remove collaborator from project
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-red-400 text-sm">
-                      Warning: a deleted task cannot be recovered
+                      Warning: project will no longer be accessible to the person
                     </p>
-                    <p className="mt-4 text-gray-700">Confirm deletion of following task?</p>
-                    <p className="mt-2 text-gray-700">Name: <span className="text-gray-500">{task.name}</span></p>                    
+                    <p className="mt-4 text-gray-700">Confirm deletion of following collaborator?</p>
+                    <p className="mt-2 text-gray-700">Name: <span className="text-gray-500">{collaborator.name}</span></p>                    
                     <p className="mt-2 text-gray-700">Project: <span className="text-gray-500">{project.name}</span></p>                    
                   </div>
                 </div>
@@ -102,14 +102,15 @@ const ModalDeleteTask = () => {
                 <button
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={deleteTask}
+                  onClick={deleteCollaborator}
+                  
                 >
                   Delete
                 </button>
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={handleModalDeleteTask}
+                  onClick={handleModalDeleteCollaborator}
                 >                  
                   Cancel
                 </button>
@@ -122,4 +123,4 @@ const ModalDeleteTask = () => {
   )
 }
 
-export default ModalDeleteTask
+export default ModalDeleteCollaborator

@@ -12,6 +12,7 @@ const ProjectsProvider = ({children}) => {
     const [loading, setLoading] = useState(false)
     const [modalFormTask, setModalFormTask] = useState(false)
     const [modalDeleteTask, setModalDeleteTask] = useState(false)
+    const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false)
     const [task, setTask] = useState({})
     const [collaborator, setCollaborator] = useState({})
 
@@ -154,6 +155,11 @@ const ProjectsProvider = ({children}) => {
         setModalDeleteTask(!modalDeleteTask)
     }
 
+    const handleModalDeleteCollaborator = (collaborator) => {
+        setCollaborator(collaborator)
+        setModalDeleteCollaborator(!modalDeleteCollaborator)
+    }    
+
     const submitTask = async (task) => {        
         if (task?.id){
             await updateTask(task)
@@ -245,7 +251,32 @@ const ProjectsProvider = ({children}) => {
                 msg:data.msg,
             })
             setCollaborator({})            
-            setAlert({})
+            
+        } catch (error) {
+            setAlert({
+                msg:error.response.data.msg,
+                error:true
+            })
+        }
+    }
+
+    const deleteCollaborator = async () => {
+        try {
+            const token = localStorage.getItem("token")
+            const { data } = await axiosClient.post(`/projects/delete-collaborator/${project._id}`, 
+                {id:collaborator._id}, axiosClientRequestAuthConfig(token))
+
+                
+            const updated = {...project}
+            updated.collaborators = updated.collaborators.filter( c => c._id !== collaborator._id )
+            setProject(updated)
+
+            setAlert({
+                msg:data.msg,
+            })
+            setCollaborator({})            
+            setModalDeleteCollaborator(false)
+            
         } catch (error) {
             setAlert({
                 msg:error.response.data.msg,
@@ -275,7 +306,10 @@ const ProjectsProvider = ({children}) => {
                 deleteTask,
                 submitCollaborator,
                 collaborator,
-                addCollaborator
+                addCollaborator,
+                modalDeleteCollaborator,
+                handleModalDeleteCollaborator,
+                deleteCollaborator
             }}
         >{children}
         </ProjectsContext.Provider>

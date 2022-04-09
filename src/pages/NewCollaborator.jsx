@@ -32,7 +32,7 @@ const NewCollaborator = () => {
       <div className="mt-10 flex justify-center">            
         <FormCollaborator />
       </div>
-      {loading ? <p className="text-center">"Searching..."</p> : collaborator?._id && (
+      {loading ? <p className="text-center">Searching...r</p> : collaborator?._id && (
         <div className="flex justify-center mt-10">
           <div className="bg-white py-10 px-5 md:w-1/2 rounded shadow">
             <h2 className="text-left mb-5 text-md font-bold text-gray-600">Results</h2>

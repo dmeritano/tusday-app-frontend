@@ -3,20 +3,21 @@ import { useParams, Link } from "react-router-dom"
 import useProjects from "../hooks/useProjects"
 import ModalFormTask from "../components/ModalFormTask"
 import ModalDeleteTask from "../components/ModalDeleteTask"
+import ModalDeleteCollaborator from "../components/ModalDeleteCollaborator"
 import Task from "../components/Task"
 import Alert from "../components/Alert"
-
+import Collaborator from "../components/Collaborator"
 
 const Project = () => {
   const params = useParams()
-  const { getProjectById, project, loading, handleModalTask, alert } = useProjects()  
-  
+  const { getProjectById, project, loading, handleModalTask, alert } =
+    useProjects()
+
   useEffect(() => {
-    getProjectById(params.id)    
-    
+    getProjectById(params.id)
   }, [])
-  
-  const { name, tasks } = project
+
+  const { name, tasks, collaborators } = project
 
   if (loading) return "Loading..."
 
@@ -50,7 +51,7 @@ const Project = () => {
         </div>
       </div>
       <button
-        onClick={ handleModalTask }
+        onClick={handleModalTask}
         type="button"
         className="bg-orange-400 text-white text-sm px-5 py-1 w-full md:w-auto rounded uppercase font-bold text-center mt-5 flex gap-2 items-center justify-center"
       >
@@ -71,34 +72,53 @@ const Project = () => {
 
       <p className="font-bold text-lg mt-10 text-gray-700">Task List</p>
 
-      {alert.msg && <Alert alert={alert}/>}
+      {alert.msg && <Alert alert={alert} />}
 
       <div className="bg-white shadow mt-5 rounded">
-          {tasks?.length ? 
-            tasks?.map( task => (
-              <Task
-                key={task._id}
-                task={task}
-              />
-            )) : 
-            <p 
-              className="text-center text-gray-700 my-5 p-10">
-                There are no tasks in the project. <span className="text-orange-700">Try adding one!</span>
-            </p>
-          }
+        {tasks?.length ? (
+          tasks?.map((task) => <Task key={task._id} task={task} />)
+        ) : (
+          <p className="text-center text-gray-700 my-5 p-10">
+            There are no tasks in the project.{" "}
+            <span className="text-orange-700">Try adding one!</span>
+          </p>
+        )}
       </div>
-      <div className="flex items-center justify-between mt-10">
-        <p className="font-bold text-lg text-gray-700">Collaborators</p>
 
-        <Link
-          to={`/projects/new-collaborator/${project._id}`}
-          className="uppercase text-gray-500 hover:text-orange-700 font-bold"
-        >Add</Link>
-      </div>  
-      
+      {tasks?.length > 0 && (
+        <>
+          <div className="flex items-center justify-between mt-10">
+            <p className="font-bold text-lg text-gray-700">Collaborators</p>
+
+            <Link
+              to={`/projects/new-collaborator/${project._id}`}
+              className="uppercase text-gray-500 hover:text-orange-700 font-bold"
+            >
+              Add
+            </Link>
+          </div>
+
+          <div className="bg-white shadow mt-5 rounded">
+            {collaborators?.length ? (
+              collaborators?.map((collaborator) => (
+                <Collaborator
+                  key={collaborator._id}
+                  collaborator={collaborator}
+                />
+              ))
+            ) : (
+              <p className="text-center text-gray-700 my-5 p-10">
+                There are no collaborators in the project{" "}
+                <span className="text-orange-700">Try adding one!</span>
+              </p>
+            )}
+          </div>
+        </>
+      )}
 
       <ModalFormTask />
       <ModalDeleteTask />
+      <ModalDeleteCollaborator />
     </>
   )
 }
