@@ -1,13 +1,16 @@
 import useProjects from "../hooks/useProjects"
+import useAdmin from "../hooks/useAdmin"
 import { formatDate } from "../helpers"
 
 const Task = ( {task} ) => {
 
-    const { name, description, deliveryDate, priority, completed, _id} = task
+    const { name, description, deliveryDate, priority, completed, _id } = task
 
     const priorityColor = priority === "High" ? "text-red-500" : (priority === "Medium" ? "text-orange-400" : "text-gray-700")
 
-    const { handleModalEditTask, handleModalDeleteTask } = useProjects()
+    const { handleModalEditTask, handleModalDeleteTask, handleTaskStatus } = useProjects()
+
+    const admin = useAdmin()
 
     return (
         <div className="border-b p-4 flex justify-between items-center">
@@ -18,25 +21,25 @@ const Task = ( {task} ) => {
                 <p className="text-sm text-gray-700">{description}</p>                
             </div>
             <div className="flex gap-1">
-                <button 
-                    className="w-20 border-2 border-sky-600 bg-transparent px-3 py-1 text-sky-600 text-sm rounded"
-                    onClick={() => handleModalEditTask(task)}
-                >Edit</button>
-
-                {completed ? (
+                {admin && (
                     <button 
-                        className="w-20 border-2 border-green-600 bg-green-100 px-3 py-1 text-green-700 text-sm rounded"
-                    >Done</button>
-                ): (
-                    <button 
-                        className="w-20 border-2 border-gray-600 bg-gray-100 px-3 py-1 text-gray-700 text-sm rounded"
-                    >Undone</button>
+                        className="w-20 border-2 border-sky-600 bg-transparent px-3 py-1 text-sky-600 text-sm rounded"
+                        onClick={() => handleModalEditTask(task)}
+                    >Edit</button>
                 )}
 
+
                 <button 
-                    className="w-20 border-2 border-red-600 bg-transparent px-3 py-1 text-red-600 text-sm rounded"
-                    onClick={() => handleModalDeleteTask(task)}
-                >Delete</button>                
+                    className={`w-20 border-2 text-sm rounded bg-green-100 px-3 py-1 ${completed ? "border-green-600 bg-green-100 text-green-700" : "border-gray-600 bg-gray-100  text-gray-700"}`}
+                    onClick={() => handleTaskStatus(_id)}
+                >{completed ? "Done" : "Undone"}</button>
+
+                {admin && (
+                    <button 
+                        className="w-20 border-2 border-red-600 bg-transparent px-3 py-1 text-red-600 text-sm rounded"
+                        onClick={() => handleModalDeleteTask(task)}
+                    >Delete</button>                
+                )}
             </div>
         </div>
     )    

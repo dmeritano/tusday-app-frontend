@@ -251,7 +251,9 @@ const ProjectsProvider = ({children}) => {
                 msg:data.msg,
             })
             setCollaborator({})            
-            
+            setTimeout(()=>{
+                setAlert({})
+            },2000)                                    
         } catch (error) {
             setAlert({
                 msg:error.response.data.msg,
@@ -274,14 +276,33 @@ const ProjectsProvider = ({children}) => {
             setAlert({
                 msg:data.msg,
             })
-            setCollaborator({})            
+            setCollaborator({})
             setModalDeleteCollaborator(false)
+
+            setTimeout(()=>{
+                setAlert({})
+            },2000)                                    
+            
             
         } catch (error) {
             setAlert({
                 msg:error.response.data.msg,
                 error:true
             })
+        }
+    }
+
+    const handleTaskStatus = async (id) => {    
+        try {
+            const token = localStorage.getItem("token")
+            const { data } = await axiosClient.post(`/tasks/status/${id}`, {}, axiosClientRequestAuthConfig(token))            
+            const updated = {...project}
+            updated.tasks = updated.tasks.map( t => t._id === data._id ? data : t )
+            setProject(updated)
+            setTask({})            
+            setAlert({})            
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -309,7 +330,8 @@ const ProjectsProvider = ({children}) => {
                 addCollaborator,
                 modalDeleteCollaborator,
                 handleModalDeleteCollaborator,
-                deleteCollaborator
+                deleteCollaborator,
+                handleTaskStatus
             }}
         >{children}
         </ProjectsContext.Provider>
