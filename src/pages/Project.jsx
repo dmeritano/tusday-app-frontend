@@ -6,19 +6,62 @@ import ModalFormTask from "../components/ModalFormTask"
 import ModalDeleteTask from "../components/ModalDeleteTask"
 import ModalDeleteCollaborator from "../components/ModalDeleteCollaborator"
 import Task from "../components/Task"
-import Alert from "../components/Alert"
 import Collaborator from "../components/Collaborator"
+import io from "socket.io-client"
+
+let socket
+
 
 const Project = () => {
   const params = useParams()
-  const { getProjectById, project, loading, handleModalTask, alert } =
-    useProjects()
+  const { getProjectById, 
+          project, 
+          loading, 
+          handleModalTask, 
+          alert, 
+          submitProjectTasks, 
+          deleteProjectTask, 
+          updateProjectTask, 
+          changeTaskStatus } = useProjects()
   
   const admin = useAdmin()
 
   useEffect(() => {
     getProjectById(params.id)
   }, [])
+
+  //open socket io comm
+  useEffect(() => {
+     socket = io(import.meta.env.VITE_BACKEND_URL)
+     socket.emit("open-project", params.id) //params.id == project._id
+  },[]) //<- runs only once
+  //Listen for changes
+  useEffect(() => {
+    socket.on("task-created", newTask => {
+      if (newTask.project === project._id){
+        submitProjectTasks(newTask)
+      } 
+    })
+    socket.on("task-deleted", deletedTask => {
+      if (deletedTask.project === project._id){
+        deleteProjectTask(deletedTask)
+      }
+    })
+    socket.on("task-updated", updatedTask => {
+      if (updatedTask.project._id === project._id){  // here comes complete project object, with all its attributes
+        updateProjectTask(updatedTask)
+      }
+    })
+    socket.on("task-status-updated", updatedTask => {
+      if (updatedTask.project._id === project._id){  // here comes complete project object, with all its attributes
+        changeTaskStatus(updatedTask)
+      }
+    })
+    
+    
+
+  }) //<- no dependencies, so it runs all the time
+
 
   const { name, tasks, collaborators } = project
 

@@ -1,12 +1,20 @@
 import { Link } from "react-router-dom"
 import useProjects from "../hooks/useProjects"
+import useAuth from "../hooks/useAuth"
 import ModalFindProjects from "./ModalFindProjects"
+
 
 const Header = () => {
 
 
-  const {modalFindProjects, handleModalFindProjects } = useProjects()
+  const { handleModalFindProjects, closeSessionProjects } = useProjects()
+  const { closeSessionAuth } = useAuth()
 
+  const handleCloseSession = () => {
+    closeSessionAuth()
+    closeSessionProjects()
+    localStorage.removeItem("token")
+  }
 
   return (
     <header className="px-4 py-2 bg-white border-b">
@@ -32,6 +40,7 @@ const Header = () => {
             <button
               type="buttom"
               className="bg-orange-600 text-white text-sm uppercase py-2 px-3 font-bold rounded hover:cursor-pointer hover:bg-orange-900 transition-colors"
+              onClick={handleCloseSession}
             >Logout</button>
 
 
