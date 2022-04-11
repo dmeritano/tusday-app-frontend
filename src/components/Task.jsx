@@ -4,7 +4,7 @@ import { formatDate } from "../helpers"
 
 const Task = ( {task} ) => {
 
-    const { name, description, deliveryDate, priority, completed, _id } = task
+    const { name, description, deliveryDate, priority, completed, completedBy, _id } = task
 
     const priorityColor = priority === "High" ? "text-red-500" : (priority === "Medium" ? "text-orange-400" : "text-gray-700")
 
@@ -14,13 +14,14 @@ const Task = ( {task} ) => {
 
     return (
         <div className="border-b p-4 flex justify-between items-center">
-            <div className="mr-3">
+            <div className="flex flex-col items-start">
                 <p className="mb-1 text-xl">{name}</p>
                 <p className="mb-1 text-sm font-mono">Priority: <span className={`font-sans ${priorityColor}`}>{priority}</span></p>
                 <p className="mb-2 text-sm font-mono">Due date: <span className="text-md text-sky-900 font-sans">{formatDate(deliveryDate)}</span></p>
-                <p className="text-sm text-gray-700">{description}</p>                
+                <p className="text-sm text-gray-700">{description}</p>
+                {completed && <p className="text-xs rounded px-2 mt-1 bg-gray-200 text-green-600">Completed By: {completedBy.name}</p>}               
             </div>
-            <div className="flex gap-1">
+            <div className="flex flex-col lg:flex-row gap-1">
                 {admin && (
                     <button 
                         className="w-20 border-2 border-sky-600 bg-transparent px-3 py-1 text-sky-600 text-sm rounded"

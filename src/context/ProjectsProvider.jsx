@@ -13,6 +13,7 @@ const ProjectsProvider = ({children}) => {
     const [modalFormTask, setModalFormTask] = useState(false)
     const [modalDeleteTask, setModalDeleteTask] = useState(false)
     const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false)
+    const [modalFindProjects, setModalFindProjects] = useState(false)
     const [task, setTask] = useState({})
     const [collaborator, setCollaborator] = useState({})
 
@@ -109,10 +110,15 @@ const ProjectsProvider = ({children}) => {
             setProject(data)
             setAlert({})
         } catch (error) {
+            navigate("/projects")
             setAlert({
                 msg:error.response.data.msg,
                 error:true
             })
+            setTimeout( () => {
+                setAlert({})
+            },2000)
+
         }finally{
             setLoading(false)
         }
@@ -306,6 +312,10 @@ const ProjectsProvider = ({children}) => {
         }
     }
 
+    const handleModalFindProjects = () => {        
+        setModalFindProjects(!modalFindProjects)
+    }
+
     return(
         <ProjectsContext.Provider
             value={{
@@ -331,7 +341,9 @@ const ProjectsProvider = ({children}) => {
                 modalDeleteCollaborator,
                 handleModalDeleteCollaborator,
                 deleteCollaborator,
-                handleTaskStatus
+                handleTaskStatus,
+                modalFindProjects,
+                handleModalFindProjects                
             }}
         >{children}
         </ProjectsContext.Provider>

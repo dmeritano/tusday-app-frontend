@@ -26,9 +26,7 @@ const Project = () => {
 
   const { msg } = alert
 
-  return msg && alert.error ? (
-    <Alert alert={alert} />
-  ) : (
+  return (
     <>
       <div className="flex justify-between">
         <h1 className="text-4xl font-black text-gray-600 text-center">
@@ -83,7 +81,7 @@ const Project = () => {
 
       <p className="font-bold text-lg mt-10 text-gray-700">Task List</p>
 
-      {alert.msg && <Alert alert={alert} />}
+      {/* {alert.msg && <Alert alert={alert} />} */}
 
       <div className="bg-white shadow mt-5 rounded">
         {tasks?.length ? (
