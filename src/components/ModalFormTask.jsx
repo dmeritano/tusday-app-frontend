@@ -156,9 +156,10 @@ const ModalFormTask = () => {
                       </label>
                       <textarea
                         id="description"
-                        placeholder="Project description"
+                        placeholder="Task description"
                         className="border w-full p-2 mt-2 rounded bg-blue-50"
                         value={description}
+                        rows="4"
                         onChange={(evt) => setDescription(evt.target.value)}
                       ></textarea>
                     </div>

@@ -57,9 +57,6 @@ const Project = () => {
         changeTaskStatus(updatedTask)
       }
     })
-    
-    
-
   }) //<- no dependencies, so it runs all the time
 
 

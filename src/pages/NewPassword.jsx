@@ -12,7 +12,6 @@ const NewPassword = () => {
   const params = useParams()
   const { token } = params
 
-  console.log("forgot con token:",token)
   //reset-password
   useEffect(() => {
     const checkToken = async () => {
@@ -37,7 +36,6 @@ const NewPassword = () => {
 
     try {
       const url = `/users/reset-password/${token}`
-      console.log(url)
       const { data } = await axiosClient.post(url,{password})
       
       setAlert({msg:data.msg})

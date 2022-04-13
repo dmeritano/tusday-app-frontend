@@ -81,6 +81,7 @@ const FormProject = () => {
           id="description"
           placeholder="Project description"
           className="border w-full p-2 mt-2 rounded bg-blue-50"
+          rows="4"
           value={description}
           onChange={(evt) => setDescription(evt.target.value)}
         ></textarea>

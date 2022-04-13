@@ -18,6 +18,7 @@ const ProjectsProvider = ({children}) => {
     const [modalDeleteTask, setModalDeleteTask] = useState(false)
     const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false)
     const [modalFindProjects, setModalFindProjects] = useState(false)
+    const [modalDeleteProject, setModalDeleteProject] = useState(false)
     const [task, setTask] = useState({})
     const [collaborator, setCollaborator] = useState({})
 
@@ -39,7 +40,6 @@ const ProjectsProvider = ({children}) => {
         getProjects()
     },[auth])
 
-
     const showAlert = alert => {
         setAlert(alert)
         
@@ -53,7 +53,6 @@ const ProjectsProvider = ({children}) => {
         socket = io(import.meta.env.VITE_BACKEND_URL)
     },[])
 
-
     const submitProject = async (project) => {
         if (project.idProject){
             //Editing
@@ -63,7 +62,6 @@ const ProjectsProvider = ({children}) => {
             await createProject(project)
         }
     }
-
 
     const createProject = async project => {
         try {
@@ -78,7 +76,7 @@ const ProjectsProvider = ({children}) => {
 
             setTimeout( () => {
                 setAlert({})
-                navigate("/projects")
+                navigate(`/projects/${data._id}`)
             },2000)
 
         } catch (error) {
@@ -86,20 +84,22 @@ const ProjectsProvider = ({children}) => {
         }
     }
     const updateProject = async project => {
-        console.log(project)
-
         try {
             const token = localStorage.getItem("token")
             if (!token) return
 
             const { data } = await axiosClient.put(`/projects/${project.idProject}`, project, axiosClientRequestAuthConfig(token))
-            //Sync the state of projects
-            const updatedProyects = projects.map( stateProject => stateProject._id === data._id ? data : stateProject)
-            setProjects(updatedProyects)
+
+            // Moved to: updatedProjectNotification
+            //const updatedProyects = projects.map( stateProject => stateProject._id === data._id ? data : stateProject)
+            //setProjects(updatedProyects)
 
             setAlert({
                 msg:"Project updated successfully"
             })
+
+            //Notify
+            socket.emit("update-project", data)
 
             setTimeout( () => {
                 setAlert({})
@@ -141,11 +141,16 @@ const ProjectsProvider = ({children}) => {
             const { data } = await axiosClient.delete(`/projects/${id}`, axiosClientRequestAuthConfig(token))
 
             //Sync the state of projects
-            const updatedProyects = projects.filter( stateProject => stateProject._id !== id )
-            setProjects(updatedProyects)
-
+            //Moved to: deleteProyectNotification
+            //const updatedProyects = projects.filter( stateProject => stateProject._id !== id )
+            //setProjects(updatedProyects)
+            setModalDeleteProject(false)            
             setAlert({msg:data.msg})
 
+            //Socket
+            socket.emit('delete-project', project)
+
+            setProject({})
             setTimeout( () => {
                 setAlert({})
                 navigate("/projects")
@@ -175,6 +180,10 @@ const ProjectsProvider = ({children}) => {
         setCollaborator(collaborator)
         setModalDeleteCollaborator(!modalDeleteCollaborator)
     }    
+
+    const handleModalDeleteProject = () => {        
+        setModalDeleteProject(!modalDeleteProject)
+    }
 
     const submitTask = async (task) => {        
         if (task?.id){
@@ -248,6 +257,7 @@ const ProjectsProvider = ({children}) => {
             
             //Socket
             socket.emit('delete-task', task)
+
             setTask({})
             setTimeout(()=>{
                 setAlert({})
@@ -266,7 +276,6 @@ const ProjectsProvider = ({children}) => {
             setCollaborator(data)
             setAlert({})
         } catch (error) {
-            console.log("no lo encontro:", error)            
             setAlert({
                 msg:error.response.data.msg,
                 error:true
@@ -376,8 +385,16 @@ const ProjectsProvider = ({children}) => {
         updated.tasks = updated.tasks.map( t => t._id === updatedTask._id ? updatedTask : t )
         setProject(updated)        
     }
-    // END Socket IO Funcs 
-
+    //Projects
+    const deleteProyectNotification = (deletedProject) => {        
+        const updatedProyects = projects.filter( stateProject => stateProject._id !== deletedProject._id )
+        setProjects(updatedProyects)
+    }
+    const updatedProjectNotification = (updatedProject) => {
+        const updatedProyects = projects.map( stateProject => stateProject._id === updatedProject._id ? updatedProject : stateProject)
+        setProjects(updatedProyects)
+    }
+    //END Socket IO Funcs 
 
     const closeSessionProjects = () => {
         setProject({})
@@ -417,7 +434,11 @@ const ProjectsProvider = ({children}) => {
                 deleteProjectTask,
                 updateProjectTask,
                 changeTaskStatus,
-                closeSessionProjects                    
+                closeSessionProjects,
+                modalDeleteProject,
+                handleModalDeleteProject,
+                deleteProyectNotification,
+                updatedProjectNotification                                
             }}
         >{children}
         </ProjectsContext.Provider>

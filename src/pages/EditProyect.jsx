@@ -2,11 +2,12 @@ import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import useProjects from "../hooks/useProjects"
 import FormProject from "../components/FormProject"
+import ModalDeleteProject from "../components/ModalDeleteProject"
 
 const EditProyect = ({ buttonText }) => {
   const params = useParams()
 
-  const { getProjectById, project, loading, deleteProject } = useProjects()
+  const { getProjectById, project, loading, deleteProject, handleModalDeleteProject } = useProjects()
 
   useEffect(() => {
     getProjectById(params.id)
@@ -48,7 +49,7 @@ const EditProyect = ({ buttonText }) => {
           </svg>
           <button
             className="uppercase font-bold"
-            onClick={handleClick}
+            onClick={handleModalDeleteProject}
           >Delete</button>          
         </div>
       </div>
@@ -56,6 +57,9 @@ const EditProyect = ({ buttonText }) => {
       <div className="mt-10 flex justify-center">
         <FormProject />
       </div>
+
+      <ModalDeleteProject />
+
     </>
   )
 }

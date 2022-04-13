@@ -2,11 +2,29 @@ import { useEffect } from "react"
 import useProjects from "../hooks/useProjects"
 import ProjectPreview from "../components/ProjectPreview"
 import Alert from "../components/Alert"
+import io from "socket.io-client"
+
+let socket
 
 const Projects = () => {
 
-  const { projects, alert } = useProjects()
+  const { projects, alert, deleteProyectNotification, updatedProjectNotification } = useProjects()
 
+  //open socket io comm
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL)
+    socket.emit("list-of-projects") //params.id == project._id
+  },[]) //<- runs only once
+  //Listen for changes
+  useEffect(() => {    
+    socket.on("project-deleted", deletedProject => {
+        deleteProyectNotification(deletedProject)
+    })
+    socket.on("project-updated", updatedProject => {      
+        updatedProjectNotification(updatedProject)
+    })
+  }) //<- no dependencies, so it runs all the time  
+ 
   const { msg } = alert
 
   return (

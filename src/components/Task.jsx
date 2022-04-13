@@ -19,9 +19,9 @@ const Task = ( {task} ) => {
                 <p className="mb-1 text-sm font-mono">Priority: <span className={`font-sans ${priorityColor}`}>{priority}</span></p>
                 <p className="mb-2 text-sm font-mono">Due date: <span className="text-md text-sky-900 font-sans">{formatDate(deliveryDate)}</span></p>
                 <p className="text-sm text-gray-700">{description}</p>
-                {completed && <p className="text-xs rounded px-2 mt-1 bg-gray-200 text-green-600">Completed By: {completedBy.name}</p>}               
+                {completed && <p className="text-xs rounded px-2 py-1 mt-1 bg-green-600 text-white">Completed by {completedBy.name}</p>}               
             </div>
-            <div className="flex flex-col lg:flex-row gap-1">
+            <div className="pl-2 flex flex-col lg:flex-row gap-1">
                 {admin && (
                     <button 
                         className="w-20 border-2 border-sky-600 bg-transparent px-3 py-1 text-sky-600 text-sm rounded"

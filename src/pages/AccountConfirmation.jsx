@@ -10,8 +10,6 @@ const AccountConfirmation = () => {
   const params = useParams()
   const { id } = params
 
-  console.log(params)
-
   useEffect(() => {
     const confirmAccount = async () => {
       try {
