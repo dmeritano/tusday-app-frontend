@@ -1,4 +1,3 @@
+# Info about project TusDay
 
-
-* TailwindCSS, HeroIcons, Headless UI
-* React Router Dom (routing and routes protection)
+[App Details](https://dmeritano.github.io/tusday-app)
