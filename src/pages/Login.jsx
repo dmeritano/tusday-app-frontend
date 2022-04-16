@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Alert from "../components/Alert"
 import { axiosClient } from "../config/axiosClient"
+import {MyCaptcha, validCaptcha} from "../components/MyCaptcha"
 
 
 import useAuth from "../hooks/useAuth"
@@ -17,6 +18,14 @@ const Login = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault()
+
+    if (!validCaptcha()){
+      setAlert({
+        msg:"Invalida captcha",
+        error:true
+      })
+      return
+    }
 
     if ([email,password].includes('')){
       setAlert({
@@ -37,8 +46,6 @@ const Login = () => {
       setAuth(data)
       //Home of projects
       navigate("/projects")
-
-
 
     } catch (error) {
       setAlert({ msg: error.response.data.msg, error: true })
@@ -111,6 +118,8 @@ const Login = () => {
           I forgot my password
         </Link>
       </nav>
+
+      <MyCaptcha />
     </>
   )
 }

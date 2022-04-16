@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import Alert from "../components/Alert"
 import { validPassword } from "../helpers" 
 import { axiosClient } from "../config/axiosClient"
+import {MyCaptcha, validCaptcha} from "../components/MyCaptcha"
 
 const Register = () => {
 
@@ -24,6 +25,9 @@ const Register = () => {
       return
     }else if (!validPassword(password)){
       setAlert({msg:"Password: Only letters and numbers | At least 6 chars",error:true})
+      return
+    }else if (!validCaptcha()){
+      setAlert({msg:"Invalid captcha",error:true})
       return
     }
 
@@ -142,6 +146,8 @@ const Register = () => {
           I forgot my password
         </Link>
       </nav>
+
+      <MyCaptcha />
     </>
   )
 }
