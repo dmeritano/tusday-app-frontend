@@ -5,6 +5,9 @@ import Alert from "./Alert"
 
 
 const FormProject = () => {  
+  
+  const demoMode = (import.meta.env.VITE_DEMO_MODE && (import.meta.env.VITE_DEMO_MODE === "true") )
+  
   const [idProject, setIdProject] = useState(null) //To determine if we are creating or editing
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
@@ -36,6 +39,9 @@ const FormProject = () => {
             error: true
         })
         return
+    }else if (demoMode){
+      showAlert({msg:"Demo version - Operation not allowed",error:true})
+      return      
     }
 
     //Send data to provider (creating or updating project)

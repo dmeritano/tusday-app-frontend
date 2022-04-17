@@ -2,6 +2,7 @@ import { axiosClient } from "../config/axiosClient"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import Alert from "../components/Alert"
+import {MyCaptcha, validCaptcha} from "../components/MyCaptcha"
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("")
@@ -9,7 +10,16 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (evt) => {
     
-    evt.preventDefault()    
+    evt.preventDefault()   
+    
+    if (!validCaptcha()){
+      setAlert({
+        msg:"Invalida captcha",
+        error:true
+      })
+      return
+    }    
+
     if (email.trim() === "" ){
       setAlert({
         msg:"All fields are required",
@@ -80,6 +90,8 @@ const ForgotPassword = () => {
           Don't have an account? Sign up!
         </Link>
       </nav>
+
+      <MyCaptcha />
     </>
   )
 }

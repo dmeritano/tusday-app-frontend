@@ -7,6 +7,9 @@ import { useParams } from "react-router-dom"
 const PRIORITIES = ["Low", "Medium", "High"]
 
 const ModalFormTask = () => {
+
+  const demoMode = (import.meta.env.VITE_DEMO_MODE && (import.meta.env.VITE_DEMO_MODE === "true") )
+
   const { modalFormTask, handleModalTask, showAlert, alert, submitTask, task } =
     useProjects()
 
@@ -41,6 +44,9 @@ const ModalFormTask = () => {
         msg: "All fields are required",
         error: true,
       })
+      return
+    }else if (demoMode){
+      showAlert({msg:"Demo version - Operation not allowed",error:true})
       return
     }
 

@@ -135,7 +135,7 @@ const ProjectsProvider = ({children}) => {
     }
 
     const deleteProject = async (id) => {
-                
+               
         try {            
             const token = localStorage.getItem("token")
             const { data } = await axiosClient.delete(`/projects/${id}`, axiosClientRequestAuthConfig(token))

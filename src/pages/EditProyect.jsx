@@ -16,11 +16,12 @@ const EditProyect = ({ buttonText }) => {
 
   const { name, _id } = project
 
+  /*
   const handleClick = () => {
     if (confirm("Delete project " + name + " ?")){      
       deleteProject(_id)
     }
-  }
+  }*/
 
   if (loading) return "Loading..."
 

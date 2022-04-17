@@ -13,6 +13,7 @@ const Register = () => {
   const [passwordRepeat, setPasswordRepeat] = useState("")
   const [alert, setAlert] = useState({})
 
+  const demoMode = (import.meta.env.VITE_DEMO_MODE && (import.meta.env.VITE_DEMO_MODE === "true") )
 
   const handleSubmit = async (evt) => {
     evt.preventDefault()
@@ -28,6 +29,9 @@ const Register = () => {
       return
     }else if (!validCaptcha()){
       setAlert({msg:"Invalid captcha",error:true})
+      return
+    }else if (demoMode){
+      setAlert({msg:"Demo version - Operation not allowed",error:true})
       return
     }
 

@@ -6,6 +6,8 @@ import Alert from "../components/Alert"
 
 const NewCollaborator = () => {
   
+  const demoMode = (import.meta.env.VITE_DEMO_MODE && (import.meta.env.VITE_DEMO_MODE === "true") )
+
   const { getProjectById, project, loading, collaborator, addCollaborator, alert } = useProjects()
   const params = useParams()
 
@@ -13,9 +15,6 @@ const NewCollaborator = () => {
     getProjectById(params.id)
   },[])
 
-  const handleAddCollaborator = () => {
-    
-  }
 
   if (!project?._id) return <Alert alert={alert} />
 
@@ -40,7 +39,8 @@ const NewCollaborator = () => {
               <p>{collaborator.name}</p>
               <button
                 type="button"
-                className="bg-orange-600 text-white px-5 rounded font-bold text-sm hover:cursor-pointer hover:bg-orange-900 transition-colors"
+                disabled={demoMode}
+                className={`bg-orange-600 text-white px-5 rounded font-bold text-sm hover:bg-orange-900 transition-colors ${demoMode ? "cursor-not-allowed" : "hover:cursor-pointer"}`}
                 onClick={() => addCollaborator({email:collaborator.email})}
               >Add</button>
             </div>

@@ -5,6 +5,8 @@ import useProjects from "../hooks/useProjects"
 const ModalDeleteProject = () => {
   const { modalDeleteProject, handleModalDeleteProject, project, deleteProject } = useProjects()
 
+  const demoMode = (import.meta.env.VITE_DEMO_MODE && (import.meta.env.VITE_DEMO_MODE === "true") )
+  
   return (
     <Transition.Root show={modalDeleteProject} as={Fragment}>
       <Dialog
@@ -102,8 +104,9 @@ const ModalDeleteProject = () => {
               <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => deleteProject(project._id)}
+                  disabled={demoMode}
+                  className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm ${demoMode ? "cursor-not-allowed" : ""}`}
+                  onClick={() => deleteProject(project._id)}                  
                 >
                   Delete
                 </button>

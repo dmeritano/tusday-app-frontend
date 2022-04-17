@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth"
 
 const SideBar = () => {
 
+  const demoMode = (import.meta.env.VITE_DEMO_MODE && (import.meta.env.VITE_DEMO_MODE === "true") )
 
   const { auth } = useAuth()
 
@@ -13,7 +14,13 @@ const SideBar = () => {
       <Link
         to="create-project"
         className="bg-orange-600 text-white font-bold block mt-5 text-center uppercase p-2 w-full rounded hover:cursor-pointer hover:bg-orange-900 transition-colors"
-      >Create project</Link>   
+      >Create project</Link>  
+
+      {demoMode && (
+        <>
+          <p className="mt-10 text-red-700">Demo mode: <span className="text-sm text-gray-600">create, update and delete operations are disabled</span></p> 
+        </>
+      )}
     </aside>
   )
 }

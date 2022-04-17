@@ -3,7 +3,7 @@ import useProjects from "../hooks/useProjects"
 import Alert from "./Alert"
 
 const FormCollaborator = () => {
-
+  
   const [email, setEmail] = useState("")
   const { showAlert,alert,submitCollaborator } = useProjects()
 
@@ -16,6 +16,7 @@ const FormCollaborator = () => {
       })
       return
     }
+
     submitCollaborator(email)
   }
 
@@ -43,7 +44,7 @@ const FormCollaborator = () => {
       </div>
       <input
         type="submit"
-        value="Find"
+        value="Find"        
         className="bg-orange-600 text-white uppercase w-full py-2 font-bold rounded hover:cursor-pointer hover:bg-orange-900 transition-colors"
       />
     </form>
