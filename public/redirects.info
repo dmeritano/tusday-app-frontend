@@ -1,0 +1,1 @@
+File "_redirects" created to fix issue with react-router-dom in netlify (when reload (F5) a page)
