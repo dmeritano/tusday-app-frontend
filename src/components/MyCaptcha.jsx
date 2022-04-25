@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { axiosClient, axiosClientRequestAuthConfig } from "../config/axiosClient"
+import { axiosClient} from "../config/axiosClient"
 
 const colors = ["#FF5733","#FFE633","#3982E7","#69E739","#E239E7"]
 .sort( () => Math.random() - 0.5)
@@ -17,6 +17,7 @@ const MyCaptcha = () => {
 
     useEffect(()=>{
       const getCatptchaNumber = async () => {
+        
         rnd = Math.floor(Math.random() * 5) + 1;
         const { data } = await axiosClient.post(`/users/captcha/${rnd}`,{})
         setImgData(data.img)

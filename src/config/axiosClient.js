@@ -1,7 +1,9 @@
 import axios from "axios"
 
+const axiosClientBaseUrl = `${import.meta.env.VITE_BACKEND_URL}/api`
+
 const axiosClient = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`,
+  baseURL: axiosClientBaseUrl,
 })
 
 
@@ -14,4 +16,4 @@ const axiosClientRequestAuthConfig = (token) => {
       }    
 }
 
-export { axiosClient, axiosClientRequestAuthConfig }
+export { axiosClient, axiosClientBaseUrl, axiosClientRequestAuthConfig }
